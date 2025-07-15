@@ -44,7 +44,7 @@ Write-Host ""
 # Check for virtual environment
 $venvPath = ".zen_venv"
 $activateScript = if ($IsWindows -or $env:OS -eq "Windows_NT") {
-    "$venvPath\Scripts\Activate.ps1"
+    "$venvPath\bin\Activate.ps1"
 } else {
     "$venvPath/bin/activate"
 }
@@ -54,11 +54,11 @@ if (Test-Path $venvPath) {
     
     # Activate virtual environment (for PowerShell on Windows)
     if ($IsWindows -or $env:OS -eq "Windows_NT") {
-        if (Test-Path "$venvPath\Scripts\Activate.ps1") {
-            & "$venvPath\Scripts\Activate.ps1"
-        } elseif (Test-Path "$venvPath\Scripts\activate.bat") {
+        if (Test-Path "$venvPath\bin\Activate.ps1") {
+            & "$venvPath\bin\Activate.ps1"
+        } elseif (Test-Path "$venvPath\bin\activate.bat") {
             # Use Python directly from venv
-            $env:PATH = "$PWD\$venvPath\Scripts;$env:PATH"
+            $env:PATH = "$PWD\$venvPath\bin;$env:PATH"
         }
     }
 } else {

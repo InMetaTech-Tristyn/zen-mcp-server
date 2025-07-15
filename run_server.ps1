@@ -354,7 +354,7 @@ function Initialize-Environment {
                 Remove-Item -Recurse -Force $VENV_PATH
             } else {
                 Write-Success "Virtual environment already exists"
-                $pythonPath = "$VENV_PATH\Scripts\python.exe"
+                $pythonPath = "$VENV_PATH\bin\python.exe"
                 if (Test-Path $pythonPath) {
                     return $pythonPath
                 }
@@ -367,13 +367,13 @@ function Initialize-Environment {
             if ($LASTEXITCODE -eq 0) {
                 # Install pip in the uv environment for compatibility
                 Write-Info "Installing pip in uv environment..."
-                uv pip install --python "$VENV_PATH\Scripts\python.exe" pip
+                uv pip install --python "$VENV_PATH\bin\python.exe" pip
                 if ($LASTEXITCODE -eq 0) {
                     Write-Success "Environment created with uv (pip installed)"
                 } else {
                     Write-Success "Environment created with uv"
                 }
-                return "$VENV_PATH\Scripts\python.exe"
+                return "$VENV_PATH\bin\python.exe"
             }
         } catch {
             Write-Warning "uv failed, falling back to venv"
@@ -415,7 +415,7 @@ function Initialize-Environment {
             }
         } else {
             Write-Success "Virtual environment already exists"
-            return "$VENV_PATH\Scripts\python.exe"
+            return "$VENV_PATH\bin\python.exe"
         }
     }
     
@@ -431,7 +431,7 @@ function Initialize-Environment {
     }
     
     Write-Success "Virtual environment created"
-    return "$VENV_PATH\Scripts\python.exe"
+    return "$VENV_PATH\bin\python.exe"
 }
 
 # Setup virtual environment (legacy function for compatibility)
@@ -509,8 +509,8 @@ function Install-Dependencies {
     
     if ($PythonPath -eq "" -or $args.Count -eq 0) {
         # Legacy call without parameters
-        $pipCmd = if (Test-Path "$VENV_PATH\Scripts\pip.exe") {
-            "$VENV_PATH\Scripts\pip.exe"
+        $pipCmd = if (Test-Path "$VENV_PATH\bin\pip.exe") {
+            "$VENV_PATH\bin\pip.exe"
         } elseif (Test-Command "pip") {
             "pip"
         } else {
@@ -554,11 +554,11 @@ function Install-Dependencies {
         Write-Info "Installing dependencies with uv..."
         try {
             # Install in the virtual environment
-            uv pip install --python "$VENV_PATH\Scripts\python.exe" -r requirements.txt
+            uv pip install --python "$VENV_PATH\bin\python.exe" -r requirements.txt
             if ($LASTEXITCODE -eq 0) {
                 # Also install dev dependencies if available
                 if (Test-Path "requirements-dev.txt") {
-                    uv pip install --python "$VENV_PATH\Scripts\python.exe" -r requirements-dev.txt
+                    uv pip install --python "$VENV_PATH\bin\python.exe" -r requirements-dev.txt
                     if ($LASTEXITCODE -eq 0) {
                         Write-Success "Development dependencies installed with uv"
                     } else {
@@ -574,7 +574,7 @@ function Install-Dependencies {
     }
     
     # Fallback to pip
-    $pipCmd = "$VENV_PATH\Scripts\pip.exe"
+    $pipCmd = "$VENV_PATH\bin\pip.exe"
     if (!(Test-Path $pipCmd)) {
         $pipCmd = "pip"
     }
@@ -816,8 +816,8 @@ function Test-GeminiCliIntegration {
         @"
 @echo off
 cd /d "%~dp0"
-if exist ".zen_venv\Scripts\python.exe" (
-    .zen_venv\Scripts\python.exe server.py %*
+if exist ".zen_venv\bin\python.exe" (
+    .zen_venv\bin\python.exe server.py %*
 ) else (
     python server.py %*
 )
@@ -1070,8 +1070,8 @@ function Start-Server {
     Import-EnvFile
     
     # Determine Python command
-    $pythonCmd = if (Test-Path "$VENV_PATH\Scripts\python.exe") {
-        "$VENV_PATH\Scripts\python.exe"
+    $pythonCmd = if (Test-Path "$VENV_PATH\bin\python.exe") {
+        "$VENV_PATH\bin\python.exe"
     } elseif (Test-Command "python") {
         "python"
     } else {

@@ -11,9 +11,6 @@ if not exist venv (
     if %ERRORLEVEL% neq 0 exit /b 1
 )
 
-REM Activate virtual environment
-call venv\Scripts\activate.bat
-
 REM Load environment variables from .env if it exists
 if exist .env (
     for /f "usebackq tokens=* delims=" %%a in ('.env') do (

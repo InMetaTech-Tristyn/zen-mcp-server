@@ -6,7 +6,7 @@ import os
 import time
 from typing import Optional
 
-from google import genai
+import google.genai as genai
 from google.genai import types
 
 from .base import ModelCapabilities, ModelProvider, ModelResponse, ProviderType, create_temperature_constraint

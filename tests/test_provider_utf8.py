@@ -42,7 +42,7 @@ class TestProviderUTF8Encoding(unittest.TestCase):
         self.assertGreater(tokens, 0)
 
     @pytest.mark.skip(reason="Requires real Gemini API access")
-    @patch("google.generativeai.GenerativeModel")
+    @patch("google.genai.GenerativeModel")
     def test_gemini_provider_utf8_request(self, mock_model_class):
         """Test that the Gemini provider handles UTF-8 correctly."""
         # Mock Gemini response
@@ -276,7 +276,7 @@ class TestProviderUTF8Encoding(unittest.TestCase):
         self.assertEqual(parsed["description"], provider_data["description"])
 
     @pytest.mark.skip(reason="Requires real Gemini API access")
-    @patch("google.generativeai.GenerativeModel")
+    @patch("google.genai.GenerativeModel")
     def test_gemini_provider_handles_api_encoding_error(self, mock_model_class):
         """Test that the Gemini provider handles a non-UTF-8 API response."""
         from unittest.mock import PropertyMock

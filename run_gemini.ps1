@@ -10,7 +10,7 @@ if (-not (Test-Path "venv")) {
 }
 
 # Activate virtual environment
-. "$SCRIPT_DIR\venv\Scripts\Activate.ps1"
+. "$SCRIPT_DIR\venv\bin\Activate.ps1"
 
 # Load environment variables from .env if it exists
 if (Test-Path ".env") {
