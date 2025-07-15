@@ -33,5 +33,10 @@ source "$SCRIPT_DIR/venv/bin/activate"
 # Change to script directory to ensure proper working directory
 cd "$SCRIPT_DIR"
 
+# Load environment variables from .env file if it exists
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.env" | grep -v '^$' | xargs)
+fi
+
 # Run the server
 exec python "$SCRIPT_DIR/server.py"
