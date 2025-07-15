@@ -1,14 +1,14 @@
 {
-  "comment": "Windows configuration using WSL (Windows Subsystem for Linux)",
-  "comment2": "Replace YOUR_WSL_USERNAME with your WSL username",
-  "comment3": "Make sure the server is installed in your WSL environment",
+  "comment": "Windows configuration using WSL with standalone server",
+  "comment2": "Run './run-server.sh' in WSL to set up the environment and get exact paths",
+  "comment3": "Use './run-server.sh -c' to display the correct configuration",
   "mcpServers": {
-    "gemini": {
+    "zen": {
       "command": "wsl.exe",
-      "args": ["/home/YOUR_WSL_USERNAME/gemini-mcp-server/run_gemini.sh"],
-      "env": {
-        "GEMINI_API_KEY": "your-gemini-api-key-here"
-      }
+      "args": [
+        "/path/to/zen-mcp-server/.zen_venv/bin/python",
+        "/path/to/zen-mcp-server/server.py"
+      ]
     }
   }
 }

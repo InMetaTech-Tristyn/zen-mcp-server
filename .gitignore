@@ -106,6 +106,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env~
 .venv
 env/
 venv/
@@ -159,3 +160,27 @@ test_output/
 htmlcov/
 coverage.xml
 .pytest_cache/
+
+# Test simulation artifacts (dynamically created during testing)
+test_simulation_files/.claude/
+
+# Temporary test directories
+test-setup/
+
+# Scratch feature documentation files
+FEATURE_*.md
+# Temporary files
+/tmp/
+
+# Local user instructions
+CLAUDE.local.md
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# Standalone mode files
+.zen_venv/
+.docker_cleaned
+logs/
+*.backup
+/.desktop_configured

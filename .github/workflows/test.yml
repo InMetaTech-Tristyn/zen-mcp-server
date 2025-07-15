@@ -25,15 +25,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install -r requirements-dev.txt
     
     - name: Run unit tests
       run: |
-        # Run all tests except live integration tests
-        # These tests use mocks and don't require API keys
-        python -m pytest tests/ --ignore=tests/test_live_integration.py -v
+        # Run only unit tests (exclude simulation tests and integration tests)
+        # Integration tests require local-llama which isn't available in CI
+        python -m pytest tests/ -v --ignore=simulator_tests/ -m "not integration"
       env:
         # Ensure no API key is accidentally used in CI
         GEMINI_API_KEY: ""
+        OPENAI_API_KEY: ""
 
   lint:
     runs-on: ubuntu-latest
@@ -48,52 +50,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install ruff black
+        pip install -r requirements-dev.txt
     
     - name: Run black formatter check
-      run: black --check .
+      run: black --check . --exclude="test_simulation_files/"
     
     - name: Run ruff linter
-      run: ruff check .
+      run: ruff check . --exclude test_simulation_files
 
-  live-tests:
-    runs-on: ubuntu-latest
-    # Only run live tests on main branch pushes (requires manual API key setup)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    
-    - name: Check API key availability
-      id: check-key
-      run: |
-        if [ -z "${{ secrets.GEMINI_API_KEY }}" ]; then
-          echo "api_key_available=false" >> $GITHUB_OUTPUT
-          echo "⚠️ GEMINI_API_KEY secret not configured - skipping live tests"
-        else
-          echo "api_key_available=true" >> $GITHUB_OUTPUT
-          echo "✅ GEMINI_API_KEY found - running live tests"
-        fi
-    
-    - name: Run live integration tests
-      if: steps.check-key.outputs.api_key_available == 'true'
-      run: |
-        # Run live tests that make actual API calls
-        python tests/test_live_integration.py
-      env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-    
-    - name: Skip live tests
-      if: steps.check-key.outputs.api_key_available == 'false'
-      run: |
-        echo "🔒 Live integration tests skipped (no API key configured)"
-        echo "To enable live tests, add GEMINI_API_KEY as a repository secret"
